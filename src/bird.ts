@@ -75,6 +75,12 @@ export class Bird extends FlappyElement {
                     break;
             }
         });
+        document.addEventListener("mousedown", () => {
+            this.set_flying(true);
+        })
+        document.addEventListener("mouseup", () => {
+            this.set_flying(false);
+        })
     }
 }
 

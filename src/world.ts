@@ -20,7 +20,9 @@ export class World {
     constructor() {
         let canvas = document.body.appendChild(document.createElement("canvas"));
         canvas.classList.add("flappy-world")
-        this.context = canvas.getContext("2d");
+        this.context = canvas.getContext("2d", {
+            alpha: false
+        });
     }
 }
 

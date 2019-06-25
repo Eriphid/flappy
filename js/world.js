@@ -3,7 +3,9 @@ export class World {
         this.wall_width = 80;
         let canvas = document.body.appendChild(document.createElement("canvas"));
         canvas.classList.add("flappy-world");
-        this.context = canvas.getContext("2d");
+        this.context = canvas.getContext("2d", {
+            alpha: false
+        });
     }
     get width() { return this.canvas.width; }
     set width(value) { this.canvas.width = value; }
