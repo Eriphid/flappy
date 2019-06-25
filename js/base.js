@@ -55,11 +55,16 @@ class FlappyElement {
                 configurable: true
             }
         });
-        this.update = (time) => {
-            this.tweens.forEach(x => x.update(time));
-            this.x += this.speed.x;
-            this.y += this.speed.y;
-        };
+        {
+            let timestamp = null;
+            this.update = (new_timestamp) => {
+                this.tweens.forEach(x => x.update(new_timestamp));
+                const elapsed = timestamp ? new_timestamp - timestamp : 0;
+                this.x += this.speed.x * elapsed / 1000;
+                this.y += this.speed.y * elapsed / 1000;
+                timestamp = new_timestamp;
+            };
+        }
     }
     collide_with(element) {
         for (let this_box of this.hitboxes) {

@@ -1,4 +1,4 @@
-namespace Easing{
+export namespace Easing{
     export function linear(a: number, b: number, t: number)
     {
         return (b - a) * t;
@@ -9,7 +9,7 @@ namespace Easing{
         return (b - a) * (-Math.pow(2, -10 * t) + 1)
     }
 }
-class Tween {
+export class Tween {
     at: (time: any) => number;
     start: (time: number) => void;
     update: (time: number) => void;
@@ -63,3 +63,5 @@ class Tween {
         })
     }
 }
+
+export default Tween;

@@ -1,53 +1,102 @@
-"use strict";
-class Background extends FlappyElement {
-    constructor() {
+import assets from "./assets.js";
+import FlappyElement from "./element.js";
+class RepeatedImage extends FlappyElement {
+    constructor(world) {
+        super();
+        this.offset = {
+            x: 0,
+            y: 0
+        };
+    }
+}
+export class EndlessScroll extends FlappyElement {
+    constructor(world) {
+        super();
+        this.scrollspeed = {
+            x: 0,
+            y: 0
+        };
+        let scale = 1;
+        let offset = {
+            x: 0,
+            y: 0
+        };
+        let timestamp;
+        assets.images.get("/images/background.png").then(image => {
+            timestamp = performance.now();
+            this.update = (new_timestamp) => {
+                scale = this.height / image.height;
+                const elapsed = new_timestamp - timestamp;
+                const end = {};
+                end.x = offset.x + image.width;
+                end.y = offset.y + image.height;
+                if (end.x < 0) {
+                    offset.x = end.x;
+                }
+                if (end.y < 0)
+                    offset.y = end.y;
+                timestamp = new_timestamp;
+            };
+            this._render = (ctx) => {
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(image, -offset.x, -offset.y, this.width / scale, this.height / scale, 0, 0, this.width, this.height);
+                let x = offset.x ? offset.x + image.width : 0;
+                let y = offset.y ? offset.y + image.height : 0;
+                while (y < this.height / scale) {
+                    while (x < this.width / scale) {
+                        ctx.drawImage(image, 0, 0, this.width / scale, this.height / scale, x * scale, y * scale, this.width, this.height);
+                        x += image.width;
+                    }
+                    y += image.height;
+                }
+            };
+        });
+    }
+}
+export class Background extends FlappyElement {
+    constructor(world) {
         super();
         let scale = 1;
         let offset = {
             x: 0,
             y: 0
         };
-        const onload = () => {
-            this.height = canvas.height;
-            scale = this.height / Background.sprite.height;
-        };
-        if (!Background.sprite || !Background.sprite.complete) {
-            if (!Background.sprite)
-                Background.sprite = new Image();
-            Background.sprite.onload = onload;
-            Background.sprite.src = "/images/background.jpg";
-        }
-        this.width = canvas.width;
-        this.height = canvas.height;
-        let timestamp = performance.now();
-        this.update = (new_timestamp) => {
-            const elapsed = new_timestamp - timestamp;
-            offset.x += this.speed.x * elapsed;
-            offset.y += this.speed.y * elapsed;
-            const end = {};
-            end.x = offset.x / scale + Background.sprite.width;
-            end.y = offset.y / scale + Background.sprite.height;
-            if (end.x < 0)
-                offset.x = end.x;
-            if (end.y < 0)
-                offset.y = end.y;
-            timestamp = new_timestamp;
-        };
-        this.render = () => {
-            this.apply_transform();
-            // debugger;
-            // console.log(scale);
-            ctx.drawImage(Background.sprite, -offset.x / scale, -offset.y / scale, this.width / scale, this.height / scale, 0, 0, Background.sprite.width * scale, this.height);
-            let x = offset.x + Background.sprite.width * scale;
-            let y = offset.y + Background.sprite.height * scale;
-            console.log(x, this.width);
-            while (x < this.width) {
-                ctx.drawImage(Background.sprite, 0, 0, this.width / scale, this.height / scale, x, y, Background.sprite.width * scale, this.height);
-                x += Background.sprite.width * scale;
-                y += Background.sprite.height * scale;
-                // break;
-            }
-        };
-        this.speed.x = -0.1;
+        let timestamp;
+        assets.images.get("/images/background.png").then(sprite => {
+            this.height = world.canvas.height;
+            scale = this.height / sprite.height;
+            timestamp = performance.now();
+            this.update = (new_timestamp) => {
+                const elapsed = new_timestamp - timestamp;
+                offset.x += this.speed.x * elapsed / scale / 1000;
+                offset.y += this.speed.y * elapsed / scale / 1000;
+                const end = {};
+                end.x = offset.x + sprite.width;
+                end.y = offset.y + sprite.height;
+                if (end.x < 0) {
+                    offset.x = end.x;
+                }
+                if (end.y < 0)
+                    offset.y = end.y;
+                timestamp = new_timestamp;
+            };
+            this._render = (ctx) => {
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(sprite, -offset.x, -offset.y, this.width / scale, this.height / scale, 0, 0, this.width, this.height);
+                let x = offset.x ? offset.x + sprite.width : 0;
+                let y = offset.y ? offset.y + sprite.height : 0;
+                while (y < this.height / scale) {
+                    while (x < this.width / scale) {
+                        ctx.drawImage(sprite, 0, 0, this.width / scale, this.height / scale, x * scale, y * scale, this.width, this.height);
+                        x += sprite.width;
+                    }
+                    y += sprite.height;
+                }
+            };
+            this.speed.x = -100;
+        });
+        this.width = world.canvas.width;
+        this.height = world.canvas.height;
     }
 }
+export default Background;

@@ -1,5 +1,4 @@
-"use strict";
-var Easing;
+export var Easing;
 (function (Easing) {
     function linear(a, b, t) {
         return (b - a) * t;
@@ -10,7 +9,7 @@ var Easing;
     }
     Easing.expo_out = expo_out;
 })(Easing || (Easing = {}));
-class Tween {
+export class Tween {
     constructor() {
         this.beg = 0;
         this.end = 1;
@@ -51,3 +50,4 @@ class Tween {
         return animation;
     }
 }
+export default Tween;
