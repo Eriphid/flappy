@@ -1,14 +1,19 @@
 import FlappyElement from "./element.js";
+import assets from "./assets.js";
 export class Bird extends FlappyElement {
     constructor(world) {
         super();
-        let ctx = world.context;
         let timestamp = performance.now();
         const flight = {
-            timestamp: 0,
             y: 0,
-            held: false
+            held: false,
+            speed: 700,
+            timestamp: null,
+            audio: null
         };
+        assets.audios.get("audios/flight.wav").then(audio => {
+            flight.audio = audio;
+        }).catch(console.error);
         const onload = () => {
             let r = Bird.sprite.width / Bird.sprite.height;
             this.height = 40;
@@ -27,11 +32,21 @@ export class Bird extends FlappyElement {
             const elapsed = new_timestamp - timestamp;
             const g = elapsed * 3;
             this.speed.y = Math.min(this.speed.y + g, 1000);
-            if ((timestamp - flight.timestamp) > 150 && flight.held) {
-                this.speed.y = -800;
+            if (flight.held || new_timestamp - flight.timestamp < 50) {
+                this.speed.y = -flight.speed;
                 this.rotation = -30;
                 flight.y = this.y;
-                flight.timestamp = new_timestamp;
+                if (!flight.timestamp) {
+                    if (flight.audio) {
+                        flight.audio.currentTime = 0;
+                        flight.audio.volume = 0.5;
+                        flight.audio.play().catch(console.error);
+                    }
+                    flight.timestamp = new_timestamp;
+                }
+            }
+            else {
+                flight.timestamp = null;
             }
             // this.y = Math.max(0, Math.min(this.y, canvas.height - this.height));
             if (this.y > flight.y)
@@ -41,7 +56,9 @@ export class Bird extends FlappyElement {
         this._render = (ctx) => {
             ctx.drawImage(Bird.sprite, 0, 0, this.width, this.height);
         };
-        this.set_flying = (value) => { flight.held = value; };
+        this.set_flying = (value) => {
+            flight.held = value;
+        };
         document.addEventListener("keydown", (ev) => {
             let prevent_default = true;
             switch (ev.key) {

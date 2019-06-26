@@ -23,7 +23,7 @@ class Assets{
 
     constructor()
     {
-        this.images = new AssetMap((src) => {
+        this.images = new AssetMap(src => {
             return new Promise<HTMLImageElement>((resolve, reject) => {
                 let img = new Image();
                 img.src = src;
@@ -36,7 +36,7 @@ class Assets{
             return new Promise<HTMLAudioElement>((resolve, reject) => {
                 let audio = new Audio();
                 audio.src = src;
-                audio.onload = () => resolve(audio);
+                audio.oncanplaythrough = () => resolve(audio);
                 audio.onerror = reject;
             })
         });

@@ -50,7 +50,7 @@ export class EndlessScroll extends RepeatedImage {
                 const elapsed = new_timestamp - timestamp;
                 this.offset.x += this.scrollspeed.x * elapsed / 1000;
                 this.offset.y += this.scrollspeed.y * elapsed / 1000;
-                if(this.offset.x + sprite.width * this.scale < 0)
+                while(this.offset.x + sprite.width * this.scale < 0)
                     this.offset.x += sprite.width * this.scale;
                 timestamp = new_timestamp;
             }

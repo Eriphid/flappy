@@ -1,3 +1,5 @@
+import FlappyElement from "./element";
+
 export class World {
     context: CanvasRenderingContext2D;
 
@@ -7,7 +9,7 @@ export class World {
     set height(value: number) { this.canvas.height = value; }
     get canvas() { return this.context.canvas; }
 
-    wall_width = 80
+    wall_width = 60
     get fly_area() {
         return {
             x: 0,
@@ -16,6 +18,9 @@ export class World {
             height: this.height - 2 * this.wall_width
         }
     }
+
+    killers: FlappyElement[] = []
+    score = 0
 
     constructor() {
         let canvas = document.body.appendChild(document.createElement("canvas"));

@@ -1,6 +1,8 @@
 export class World {
     constructor() {
-        this.wall_width = 80;
+        this.wall_width = 60;
+        this.killers = [];
+        this.score = 0;
         let canvas = document.body.appendChild(document.createElement("canvas"));
         canvas.classList.add("flappy-world");
         this.context = canvas.getContext("2d", {

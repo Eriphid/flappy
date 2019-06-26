@@ -3,6 +3,7 @@ import World from "./world.js";
 import assets from "./assets.js";
 
 export class Pillar extends FlappyElement {
+    static min_height: number = 100;
     constructor(world: World) {
         super();
 
@@ -13,7 +14,8 @@ export class Pillar extends FlappyElement {
             assets.images.get("/images/pillar/center.png"),
             assets.images.get("/images/pillar/top.png")
         ]).then(sprites => {
-            const base_width = this.width = Math.max( sprites[2].width, sprites[0].width, sprites[1].width);
+            Pillar.min_height = sprites[0].height + sprites[2].height;
+            const base_width = this.width = Math.max(sprites[2].width, sprites[0].width, sprites[1].width);
 
             Object.defineProperties(this, {
                 hitboxes: {
@@ -72,6 +74,7 @@ export class Pillar extends FlappyElement {
                     sprites[2].height
                 );
             }
+
         })
 
     }

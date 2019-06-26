@@ -9,6 +9,7 @@ export class Pillar extends FlappyElement {
             assets.images.get("/images/pillar/center.png"),
             assets.images.get("/images/pillar/top.png")
         ]).then(sprites => {
+            Pillar.min_height = sprites[0].height + sprites[2].height;
             const base_width = this.width = Math.max(sprites[2].width, sprites[0].width, sprites[1].width);
             Object.defineProperties(this, {
                 hitboxes: {
@@ -51,4 +52,5 @@ export class Pillar extends FlappyElement {
         });
     }
 }
+Pillar.min_height = 100;
 export default Pillar;

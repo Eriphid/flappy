@@ -2,32 +2,36 @@ import FlappyElement from "./element.js";
 import World from "./world.js";
 import Pillar from "./pillar.js";
 
-export class Tunnel extends FlappyElement {
-    passage = { position: 0, length: 0, top: 0, bottom: 0 }
+export class BasicKiller extends FlappyElement {
+    gap = { position: 0, length: 0, top: 0, bottom: 0 }
+    set_gap: (position: number, length: number) => void;
 
-    constructor(world: World) {
+    constructor(world: World, passage: { position?: number, length?: number } = {}) {
         super();
 
-        const pad = 120;
+        const min_pillar_size = Pillar.min_height + 10;
 
-        const onresize = () => {
-            this.passage.length = Math.min(200 + Math.random() * 100, this.height - 2 * pad);
-            this.passage.position = pad + Math.random() * (this.height - pad * 2 - this.passage.length) + this.passage.length / 2;
+        this.set_gap = (position: number, length: number) => {
+            if (!length)
+                length = 220 + Math.random() * 60
+            this.gap.length = Math.min(length, this.height - 2 * min_pillar_size);
+            if (!position)
+                position
+            let cy = this.gap.length / 2;
+            if (!position) {
+                const min = min_pillar_size + cy;
+                const max = this.height - min;
+                position = min + Math.random() * (max - min - cy);
+            }
+            this.gap.position = Math.max(min_pillar_size + cy, Math.min(position, this.height - cy - min_pillar_size));
         }
 
-        {
-            let height = world.height;
+        this._resized = this.set_gap.bind(this, passage.position, passage.length);
+        this._resized();
 
-            Object.defineProperty(this, "height", {
-                get: () => height,
-                set: (value) => {
-                    height = value;
-                    onresize();
-                }
-            });
-        }
-
-        onresize();
+        Object.defineProperty(this, "width", {
+            get: () => pillars.top.width
+        })
 
         this._render = (ctx: CanvasRenderingContext2D) => {
             pillars.top.render(ctx);
@@ -35,9 +39,9 @@ export class Tunnel extends FlappyElement {
         }
 
         this._update = timestamp => {
-            pillars.top.height = this.passage.top;
-            pillars.bottom.y = this.passage.bottom;
-            pillars.bottom.height = this.height - this.passage.bottom;
+            pillars.top.height = this.gap.top;
+            pillars.bottom.y = this.gap.bottom;
+            pillars.bottom.height = this.height - this.gap.bottom;
         }
 
         const pillars = {
@@ -48,13 +52,9 @@ export class Tunnel extends FlappyElement {
         pillars.top.y = 0;
         pillars.top.rotation = 180;
 
-        Object.defineProperty(this, "width", {
-            get: () => pillars.top.width
-        })
-
-        Object.defineProperties(this.passage, {
-            top: { get: () => this.passage.position - this.passage.length / 2 },
-            bottom: { get: () => this.passage.position + this.passage.length / 2 }
+        Object.defineProperties(this.gap, {
+            top: { get: () => this.gap.position - this.gap.length / 2 },
+            bottom: { get: () => this.gap.position + this.gap.length / 2 }
         })
 
         Object.defineProperties(this, {
@@ -72,4 +72,4 @@ export class Tunnel extends FlappyElement {
     }
 }
 
-export default Tunnel;
+export default BasicKiller;
