@@ -1,8 +1,9 @@
 import FlappyElement from "./element.js";
 import World from "./world.js";
 import Pillar from "./pillar.js";
+import FlappyKiller from "./flappykiller.js";
 
-export class BasicKiller extends FlappyElement {
+export class BasicKiller extends FlappyKiller {
     gap = { position: 0, length: 0, top: 0, bottom: 0 }
     set_gap: (position: number, length: number) => void;
 

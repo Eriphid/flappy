@@ -1,7 +1,7 @@
-import FlappyElement from "./element.js";
 import BasicKiller from "./basickiller.js";
 import Pillar from "./pillar.js";
-export class GroupedKiller extends FlappyElement {
+import FlappyKiller from "./flappykiller.js";
+export class GroupedKiller extends FlappyKiller {
     constructor(world) {
         super();
         let killers = [];
@@ -55,6 +55,7 @@ export class GroupedKiller extends FlappyElement {
                 killer.render(ctx);
             }
         };
+        this.score = count;
         Object.defineProperty(this, "hitboxes", {
             get: () => {
                 let i = this.x < 0 ? Math.floor(-this.x / (killer_width + margin)) : 0;

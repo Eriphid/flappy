@@ -1,6 +1,6 @@
-import FlappyElement from "./element.js";
 import Pillar from "./pillar.js";
-export class BasicKiller extends FlappyElement {
+import FlappyKiller from "./flappykiller.js";
+export class BasicKiller extends FlappyKiller {
     constructor(world, passage = {}) {
         super();
         this.gap = { position: 0, length: 0, top: 0, bottom: 0 };

@@ -86,10 +86,11 @@ const update = (time) => {
     }
     {
         let i = 0;
-        while (killers[i].x + killers[i].width < 0)
+        while (killers[i].x + killers[i].width < 0) {
             i++;
+            world.score += killers[i - 1].score;
+        }
         killers.splice(0, i);
-        world.score += i;
     }
     for (let killer of killers) {
         killer.update(time);

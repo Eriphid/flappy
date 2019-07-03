@@ -1,4 +1,5 @@
-import FlappyElement from "./element";
+import FlappyKiller from "./flappykiller.js"
+
 
 export class World {
     context: CanvasRenderingContext2D;
@@ -19,7 +20,7 @@ export class World {
         }
     }
 
-    killers: FlappyElement[] = []
+    killers: FlappyKiller[] = []
     score = 0
 
     constructor() {
